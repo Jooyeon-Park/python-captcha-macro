@@ -2,12 +2,14 @@ import tkinter as tk
 import main
 import time
 import threading
-import solveCaptcha
 import pyautogui
+import solveCaptcha
 
 is_running = True
 click_counter=0
 clicked_coordinates=[]
+
+
 # Function to execute when the 'Start' button is clicked
 def start_button_click():
     global is_running,thread
@@ -21,37 +23,45 @@ def start_button_click():
 def run_macro():
     while is_running:
         if main.isCaptcha():
+            output_text.insert(tk.END, "캡챠떴다!!!...\n")
             # Pause Macro
-            # pyautogui.hotkey('ctrl', 'c')
+            pyautogui.press('\'')
             print("Pause Macro")
             
             # Capture Captcha Image
             main.imageCapture()
-            print("Image Captured")
+            # print("Image Captured")
 
             # Solve Captcha
             result = solveCaptcha.solveCaptcha()
             print("Solved Captcha" + result)
+            output_text.insert(tk.END, "캡차 풀었당 케케케케켘\n정답은: " + result)
 
             # Click Captcha input
-            inputBoxCoord = [250,600]
-            pyautogui.click(inputBoxCoord[0],inputBoxCoord[1])
+            inputBoxCoord = [414,734]
+            pyautogui.moveTo(inputBoxCoord[0], inputBoxCoord[1], duration=0)
+            pyautogui.mouseDown()
+            time.sleep(0.3)
+            pyautogui.mouseUp()
             print("Input Click")
 
             # input Captcha
-            pyautogui.write(result)
+            pyautogui.write(result, interval=0.1)
             print("input Captcha")
 
-            time.sleep(30)
+            # # Click Confirmi
+            confirmationCoord = [416,770]
+            pyautogui.moveTo(confirmationCoord[0], confirmationCoord[1], duration=0)
+            pyautogui.mouseDown()
+            time.sleep(0.3)
+            pyautogui.mouseUp()
+            print("Confirmation Click")
+            output_text.insert(tk.END, "캡챠 입력완료!!!...\n")
 
-            # # Click Confirm
-            # confirmationCoord = ['200','200']
-            # pyautogui.click(confirmationCoord[0],confirmationCoord[1])
-            # print("Input Click")
-
-            # # Resume Macro
-            # pyautogui.hotkey('ctrl', 'c')
-            # print("Resume Macro")
+            time.sleep(1)
+            # Resume Macro
+            pyautogui.press(';')
+            print("Resume Macro")
 
         time.sleep(5)
 
@@ -62,37 +72,11 @@ def stop_button_click():
     print("Stop button clicked")
     output_text.insert(tk.END, "Stopped!\n")
 
-# Function to execute when the 'Screenshot Area' button is clicked
-def screenshot_button_click():
-    global is_running
-    is_running = False
-    output_text.insert(tk.END, "Captcha screen shot area initializing\nClick 4 corners\n")
-
-
-def input_button_click():
-    global is_running
-    is_running = False
-    output_text.insert(tk.END, "Input button...\n")
-    print("Input field initialized")
-    canvas = tk.Canvas(root, width=screen_width, height=screen_height)
-    canvas.pack()
-    canvas.bind("<Button-1>", on_mouse_click)
-
-
-def on_mouse_click(event):
-    global click_counter
-    global clicked_coordinates
-    if click_counter < 4:
-        x, y = event.x, event.y
-        clicked_coordinates.append((x, y))
-        click_counter += 1
-        output_text.insert(tk.END, f"Click {click_counter}: X={x}, Y={y}\n")
-
 # Create the main window
 root = tk.Tk()
-root.title("Captcha Macro")
+root.title("주연워그레이몬 메크로")
 
-l = tk.Label(root, text = "Captcha Macro")
+l = tk.Label(root, text = "장경진 바보")
 l.pack()
 
 # Create and configure the text field
@@ -106,14 +90,6 @@ start_button.pack()
 # Create the 'Stop' button
 stop_button = tk.Button(root, text="Stop", command=stop_button_click)
 stop_button.pack()
-
-# Create the 'Screenshot Area' button
-screenshot_button = tk.Button(root, text="Screenshot Area", command=screenshot_button_click)
-screenshot_button.pack()
-
-# Create the 'Screenshot Area' button
-input_button = tk.Button(root, text="Input", command=input_button_click)
-input_button.pack()
 
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()

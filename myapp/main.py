@@ -2,10 +2,11 @@ import solveCaptcha as solveCaptcha
 import pyautogui
 import time
 from PIL import ImageGrab
+import navyShade
 
 def isCaptcha():
     # Detect Captcha window
-    point1 = [282,564]
+    point1 = [340,495]
 
     pixel_color1 = pyautogui.pixel(point1[0],point1[1])
     #pixel_color2 = pyautogui.pixel(point2[0],point2[1])
@@ -13,18 +14,22 @@ def isCaptcha():
     color_hex1 = '#{:02x}{:02x}{:02x}'.format(pixel_color1[0], pixel_color1[1], pixel_color1[2])
     #color_hex2 = '#{:02x}{:02x}{:02x}'.format(pixel_color2[0], pixel_color2[1], pixel_color2[2])
 
-    print(f"Color at ({point1[0]}, {point1[1]}): {color_hex1}")
+    # print(f"Color at ({point1[0]}, {point1[1]}): {color_hex1}")
     #print(f"Color at ({point2[0]}, {point2[1]}): {color_hex2}")
 
-    if color_hex1 == "#183d63":
-        return True
-    return False
+    isnavy = True
+    for i in range(0,10):
+        if not navyShade.isNavy(point1[0]+i*5,point1[1]):
+            isnavy=False
+            break
+    print("IsNavy: " + str(isnavy))
+    return isnavy
 
 def imageCapture():
-    left = 158
-    top = 450
-    right = 420
-    bottom = 530
+    left = 260
+    top = 500
+    right = 570
+    bottom = 620
 
     screenshot = ImageGrab.grab(bbox=(left, top, right, bottom))
     screenshot.save("screenshot.png")
@@ -64,10 +69,5 @@ def main():
 
         time.sleep(5)
 
-
-
-
-
-
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()

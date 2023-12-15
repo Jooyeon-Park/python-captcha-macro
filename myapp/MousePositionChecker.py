@@ -9,3 +9,4 @@ while True:
 
     # Wait for a short delay (e.g., 1 second) before checking the position again
     pyautogui.sleep(1)
+        

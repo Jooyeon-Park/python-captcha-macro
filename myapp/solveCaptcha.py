@@ -8,8 +8,6 @@ def solveCaptcha():
 
     api_key = os.getenv('APIKEY_2CAPTCHA')
 
-    print(api_key)
-
     if not api_key:
         sys.exit('APIKEY_2CAPTCHA is not set in the .env file.')
     script_directory = os.path.dirname(os.path.abspath(__file__))
@@ -29,9 +27,8 @@ def solveCaptcha():
         #sys.exit(e)
 
     else:
-        print("solved: " + str(result))
-        print("solved2: " + str(result["code"]))
+        # print("solved: " + str(result))
+        # print("solved2: " + str(result["code"]))
 
         return str(result["code"])
         #sys.exit('solved: ' + str(result))
-
