@@ -6,22 +6,33 @@ import pyautogui
 import solveCaptcha
 
 is_running = True
-click_counter=0
-clicked_coordinates=[]
+click_counter = 0
+clicked_coordinates = []
+stop_event = threading.Event()
 
 
 # Function to execute when the 'Start' button is clicked
 def start_button_click():
-    global is_running,thread
+    global is_running, thread
     output_text.insert(tk.END, "Started...\n")
     print("Start button clicked")
 
+    global stop_event  # Make stop_event accessible within this function
+
     is_running = True
     thread = threading.Thread(target=run_macro)
-    thread.start()  
+    thread.start()
+
+# Function to execute when the 'Stop' button is clicked
+def stop_button_click():
+    global is_running, stop_event
+    is_running = False
+    print("Stop button clicked")
+    stop_event.set()  # Set the stop_event to signal the thread to stop
+    output_text.insert(tk.END, "Stopped!\n")
 
 def run_macro():
-    while is_running:
+    while not stop_event.is_set():
         if main.isCaptcha():
             output_text.insert(tk.END, "캡챠떴다!!!...\n")
             # Pause Macro
