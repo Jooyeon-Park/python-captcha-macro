@@ -1,42 +1,12 @@
 import tkinter as tk
-import main
-import time
 import threading
+import time
 import pyautogui
 import solveCaptcha
+import main
 
-is_running = True
-click_counter = 0
-clicked_coordinates = []
-stop_event = threading.Event()
-thread = threading.Thread()
-
-# Function to execute when the 'Start' button is clicked
-def start_button_click():
-    global is_running, thread
-    output_text.insert(tk.END, "Started...\n")
-    print("Start button clicked")
-
-    global stop_event  # Make stop_event accessible within this function
-
-    is_running = True
-    thread = threading.Thread(target=run_macro)
-    thread.start()
-
-# Function to execute when the 'Stop' button is clicked
-def stop_button_click():
-    global is_running, stop_event, thread
-    is_running = False
-    if thread:
-        # Signal the stop_event to stop the thread
-        stop_event.set()
-        thread.join()  # Wait for the thread to complete
-        thread.clear()  # Reset the thread variable
-
-    print("Stop button clicked")
-    output_text.insert(tk.END, "Stopped!\n")
-
-def run_macro():
+def worker_function():
+    """ Function to run in the thread. """
     while not stop_event.is_set():
         if main.isCaptcha():
             output_text.insert(tk.END, "캡챠떴다!!!...\n")
@@ -78,12 +48,28 @@ def run_macro():
             # Resume Macro
             pyautogui.press(';')
             print("Resume Macro")
-
         time.sleep(5)
+    print("Thread stopping 2")
+
+def start_thread():
+    """ Start the worker thread. """
+    global worker_thread, stop_event
+    stop_event.clear()
+    worker_thread = threading.Thread(target=worker_function)
+    worker_thread.start()
+
+def stop_thread():
+    """ Signal the worker thread to stop. """
+    global stop_event
+    stop_event.set()
+    print("Thread stopping 1")
 
 # Create the main window
 root = tk.Tk()
 root.title("주연워그레이몬 메크로")
+
+# Create an event that can be set to signal the thread to stop
+stop_event = threading.Event()
 
 l = tk.Label(root, text = "장경진 바보")
 l.pack()
@@ -93,11 +79,11 @@ output_text = tk.Text(root, height=10, width=40)
 output_text.pack()
 
 # Create the 'Start' button
-start_button = tk.Button(root, text="Start", command=start_button_click)
+start_button = tk.Button(root, text="Start", command=start_thread)
 start_button.pack()
 
 # Create the 'Stop' button
-stop_button = tk.Button(root, text="Stop", command=stop_button_click)
+stop_button = tk.Button(root, text="Stop", command=stop_thread)
 stop_button.pack()
 
 screen_width = root.winfo_screenwidth()
