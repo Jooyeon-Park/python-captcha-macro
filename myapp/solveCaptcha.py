@@ -30,17 +30,9 @@ def solveCaptcha():
                 "body": encoded_string
         })
         print(solution)
+        return str(solution["text"])
 
     except Exception as e:
         print(e)
         return ""
         #sys.exit(e)
-
-    else:
-        # print("solved: " + str(result))
-        # print("solved2: " + str(result["code"]))
-
-        return str(solution["text"])
-        #sys.exit('solved: ' + str(result))
-
-solveCaptcha()

@@ -57,12 +57,14 @@ def start_thread():
     stop_event.clear()
     worker_thread = threading.Thread(target=worker_function)
     worker_thread.start()
+    output_text.insert(tk.END, "Started...\n")
 
 def stop_thread():
     """ Signal the worker thread to stop. """
     global stop_event
     stop_event.set()
     print("Thread stopping 1")
+    output_text.insert(tk.END, "Stopped!\n")
 
 # Create the main window
 root = tk.Tk()
