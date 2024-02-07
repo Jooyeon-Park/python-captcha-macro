@@ -22,12 +22,18 @@ def worker_function():
             
             # Capture Captcha Image
             main.imageCapture()
-            # print("Image Captured")
+            print("Image Captured")
+
+            if stop_event.is_set():
+                break
 
             # Solve Captcha
             result = solveCaptcha.solveCaptcha()
             print("Solved Captcha" + result)
             insert_text_and_scroll("캡차 풀었당 케케케케켘\n정답은: " + result)
+
+            if stop_event.is_set():
+                break
 
             # Click Captcha input
             inputBoxCoord = [414,734]
