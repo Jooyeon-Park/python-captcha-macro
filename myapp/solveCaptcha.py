@@ -12,12 +12,6 @@ def solveCaptcha():
 
     if not api_key:
         sys.exit('APIKEY_2CAPTCHA is not set in the .env file.')
-    # script_directory = os.path.dirname(os.path.abspath(__file__))
-    # captcha_file = os.path.join(script_directory, 'screenshot.png')
-
-    # # Check if 'test.png' is a valid file
-    # if not os.path.isfile(captcha_file):
-    #     print(f"'{captcha_file}' is not a valid file.")
 
     with open("screenshot.png", "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
