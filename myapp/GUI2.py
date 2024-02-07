@@ -5,11 +5,17 @@ import pyautogui
 import solveCaptcha
 import main
 
+
+def insert_text_and_scroll(text):
+    """ Insert text into the output_text widget and scroll to the bottom. """
+    output_text.insert(tk.END, text)
+    output_text.see(tk.END)
+
 def worker_function():
     """ Function to run in the thread. """
     while not stop_event.is_set():
         if main.isCaptcha():
-            output_text.insert(tk.END, "캡챠떴다!!!...\n")
+            insert_text_and_scroll("캡챠떴다!!!...\n")
             # Pause Macro
             pyautogui.press('\'')
             print("Pause Macro")
@@ -21,7 +27,7 @@ def worker_function():
             # Solve Captcha
             result = solveCaptcha.solveCaptcha()
             print("Solved Captcha" + result)
-            output_text.insert(tk.END, "캡차 풀었당 케케케케켘\n정답은: " + result)
+            insert_text_and_scroll("캡차 풀었당 케케케케켘\n정답은: " + result)
 
             # Click Captcha input
             inputBoxCoord = [414,734]
@@ -42,7 +48,7 @@ def worker_function():
             time.sleep(0.3)
             pyautogui.mouseUp()
             print("Confirmation Click")
-            output_text.insert(tk.END, "캡챠 입력완료!!!...\n")
+            insert_text_and_scroll("캡챠 입력완료!!!...\n")
 
             time.sleep(1)
             # Resume Macro
@@ -57,14 +63,14 @@ def start_thread():
     stop_event.clear()
     worker_thread = threading.Thread(target=worker_function)
     worker_thread.start()
-    output_text.insert(tk.END, "Started...\n")
+    insert_text_and_scroll("Started...\n")
 
 def stop_thread():
     """ Signal the worker thread to stop. """
     global stop_event
     stop_event.set()
     print("Thread stopping 1")
-    output_text.insert(tk.END, "Stopped!\n")
+    insert_text_and_scroll("Stopped!\n")
 
 # Create the main window
 root = tk.Tk()
@@ -79,6 +85,13 @@ l.pack()
 # Create and configure the text field
 output_text = tk.Text(root, height=10, width=40)
 output_text.pack()
+
+# Create a Scrollbar and attach it to output_text
+scrollbar = tk.Scrollbar(root, command=output_text.yview)
+scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+# Configure output_text to use scrollbar
+output_text.config(yscrollcommand=scrollbar.set)
 
 # Create the 'Start' button
 start_button = tk.Button(root, text="Start", command=start_thread)
