@@ -83,7 +83,7 @@ l = tk.Label(root, text = "장경진 바보")
 l.pack()
 
 # Create and configure the text field
-output_text = tk.Text(root, height=10, width=40)
+output_text = tk.Text(root, height=10, width=15)
 output_text.pack()
 
 # Create a Scrollbar and attach it to output_text
